@@ -72,8 +72,8 @@ default_index = available_commodities.index("Carrot") if "Carrot" in available_c
 st.sidebar.title("ℹ️ About this Application")
 selected_commodity = st.sidebar.selectbox("Commodity", available_commodities, index=default_index)
 st.sidebar.info(
-    f"**Live {selected_commodity} Price Predictor**\n\n"
-    f"This machine learning dashboard predicts the daily wholesale price of {selected_commodity.lower()} "
+    f"**Live Vegetable Price Predictor**\n\n"
+    f"This machine learning dashboard predicts the daily wholesale price of vegetables, including {selected_commodity}, "
     "across 25 districts in Sri Lanka, using an **XGBoost Regressor** trained on historical climate and "
     "market data from 2020 to 2025.\n\n"
     "**Key Predictive Features:**\n"
@@ -84,7 +84,8 @@ st.sidebar.info(
     "advanced algorithm selection, and Explainable AI.*"
 )
 
-st.title(f"Live {selected_commodity} Price Predictor")
+st.title("Agri-Price Predictor")
+st.subheader(f"Live {selected_commodity} Price for this week")
 st.write(
     "Enter the last 7 days of actual prices plus expected climate conditions to forecast "
     f"upcoming wholesale {selected_commodity.lower()} prices."
