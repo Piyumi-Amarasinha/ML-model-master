@@ -1,0 +1,10 @@
+pandas
+numpy
+# xgboost>=3.1 changed how base_score is serialized; shap<0.50 (the max available
+# on Python<3.11) can't parse it and TreeExplainer raises a ValueError.
+xgboost<3.1
+scikit-learn
+matplotlib
+shap
+streamlit
+joblib

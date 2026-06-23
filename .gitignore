@@ -1,0 +1,15 @@
+# Ignore Cursor and VS Code settings/extensions
+.cursor/
+.vscode/
+
+# Ignore Python virtual environment and caches
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+ml_env/
+
+# Ignore local datasets or large output files if necessary
+*.csv
+*.png
+*.jpg
+output/
