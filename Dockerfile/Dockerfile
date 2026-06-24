@@ -22,4 +22,4 @@ RUN python TrainModel/trainmodel.py --commodity Carrot
 EXPOSE 8501
 
 # Set the command to run the Streamlit dashboard
-CMD ["streamlit", "run", "app/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "app/home.py", "--server.port=8501", "--server.address=0.0.0.0"]

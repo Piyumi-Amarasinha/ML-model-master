@@ -53,7 +53,7 @@ def build_feature_row(
     return row
 
 
-base_dir = Path(__file__).resolve().parents[1]
+base_dir = Path(__file__).resolve().parents[2]
 output_root = base_dir / "output"
 available_commodities = sorted(
     p.name for p in output_root.glob("*") if p.is_dir() and (p / "model.pkl").exists()
