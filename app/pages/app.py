@@ -69,6 +69,8 @@ if not available_commodities:
 
 default_index = available_commodities.index("Carrot") if "Carrot" in available_commodities else 0
 
+
+
 st.sidebar.title("ℹ️ About this Application")
 selected_commodity = st.sidebar.selectbox("Commodity", available_commodities, index=default_index)
 st.sidebar.info(
@@ -172,57 +174,40 @@ if st.button("🔮 Predict & Forecast", type="primary"):
     sum_col3.metric("Humidity", f"{humidity} %")
 
     st.markdown("---")
-    st.subheader("📈 Price Forecast")
-    if forecast_horizon > 7:
-        st.caption(
-            "Note: forecasts beyond day 7 reuse the model's own earlier predictions as the "
-            "7-day lag input, so uncertainty compounds the further out you forecast."
+    forecast_col, shap_col = st.columns(2)
+
+    with forecast_col:
+        st.subheader("📈 Price Forecast")
+        if forecast_horizon > 7:
+            st.caption(
+                "Note: forecasts beyond day 7 reuse the model's own earlier predictions as the "
+                "7-day lag input, so uncertainty compounds the further out you forecast."
+            )
+        forecast_dates = [selected_date + datetime.timedelta(days=i) for i in range(forecast_horizon)]
+
+        st.markdown("<div style='height: 30vh'></div>", unsafe_allow_html=True)
+        fig, ax = plt.subplots(figsize=(10, 4))
+        ax.plot(history_dates, recent_prices, label="Actual (last 7 days)", color="blue", marker="o")
+        ax.plot(forecast_dates, forecast_prices, label="Forecast", color="red", linestyle="dashed", marker="x")
+        ax.set_xlabel("Date")
+        ax.set_ylabel(PRICE_COLUMN)
+        ax.set_title(f"{selected_commodity} Price: Recent Actuals + Forecast")
+        ax.legend()
+        fig.autofmt_xdate()
+        st.pyplot(fig)
+        plt.close(fig)
+
+    with shap_col:
+        st.subheader("📊 Prediction Explanation (SHAP Waterfall Plot)")
+        st.write(
+            "This waterfall plot breaks down how your inputs pushed the first forecast day's "
+            "prediction up or down from the baseline."
         )
-    forecast_dates = [selected_date + datetime.timedelta(days=i) for i in range(forecast_horizon)]
 
-    fig, ax = plt.subplots(figsize=(10, 4))
-    ax.plot(history_dates, recent_prices, label="Actual (last 7 days)", color="blue", marker="o")
-    ax.plot(forecast_dates, forecast_prices, label="Forecast", color="red", linestyle="dashed", marker="x")
-    ax.set_xlabel("Date")
-    ax.set_ylabel(PRICE_COLUMN)
-    ax.set_title(f"{selected_commodity} Price: Recent Actuals + Forecast")
-    ax.legend()
-    fig.autofmt_xdate()
-    st.pyplot(fig)
-    plt.close(fig)
+        explainer = shap.TreeExplainer(model)
+        shap_values = explainer(first_input_df)
 
-    st.markdown("---")
-    st.subheader("📊 Prediction Explanation (SHAP Waterfall Plot)")
-    st.write(
-        "This waterfall plot breaks down how your inputs pushed the first forecast day's "
-        "prediction up or down from the baseline."
-    )
-
-    explainer = shap.TreeExplainer(model)
-    shap_values = explainer(first_input_df)
-
-    fig = plt.figure(figsize=(4, 3))
-    shap.plots.waterfall(shap_values[0], show=False)
-    st.pyplot(fig)
-    plt.close(fig)
-
-    st.markdown("---")
-    st.subheader("🌐 Global Model Analysis")
-    st.write("These charts explain what the model learned from the entire dataset.")
-
-    img_col1, img_col2 = st.columns(2)
-    with img_col1:
-        st.write("**Feature Importance (Bar Plot)**")
-        image_path = commodity_dir / "shap_feature_importance.png"
-        if image_path.exists():
-            st.image(str(image_path), use_container_width=True)
-        else:
-            st.warning(f"Could not find {image_path.name} for {selected_commodity}.")
-
-    with img_col2:
-        st.write("**SHAP Beeswarm Summary**")
-        image_path = commodity_dir / "shap_summary_plot.png"
-        if image_path.exists():
-            st.image(str(image_path), use_container_width=True)
-        else:
-            st.warning(f"Could not find {image_path.name} for {selected_commodity}.")
+        fig = plt.figure(figsize=(4, 3))
+        shap.plots.waterfall(shap_values[0], show=False)
+        st.pyplot(fig)
+        plt.close(fig)

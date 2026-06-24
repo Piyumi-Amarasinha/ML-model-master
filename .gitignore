@@ -13,3 +13,6 @@ ml_env/
 *.png
 *.jpg
 output/
+
+# Ignore local Streamlit config
+.streamlit/config.toml

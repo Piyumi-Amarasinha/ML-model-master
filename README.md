@@ -88,7 +88,7 @@ python TrainModel/trainmodel.py --commodity Carrot
 
 3. Run the Dashboard
 ```bash
-streamlit run app/app.py
+streamlit run app/home.py
 ```
 This starts a local server, and the dashboard opens in your default browser. Use the sidebar to switch between any commodity that has been trained. The "Market Inputs" panel takes the last 7 actual daily prices plus expected climate conditions, and forecasts forward up to 14 days — predictions beyond day 7 recursively reuse the model's own prior forecasts as the 7-day lag input.
 
